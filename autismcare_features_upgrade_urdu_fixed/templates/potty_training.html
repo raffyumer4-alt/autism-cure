@@ -1,0 +1,52 @@
+{% extends 'base.html' %}{% block content %}
+<div class="top">
+  <div><span class="pill">🚽 Age-tailored support</span><h1>Potty training — {{p['name']}}</h1><p>{{plan[0]}} • {{plan[3]}}</p></div>
+  <a class="btn ghost" href="{{url_for('profile',pid=p['id'])}}">← Back to profile</a>
+</div>
+
+<div class="notice"><b>Important:</b> This is a supportive training guide, not a medical treatment. Keep practice calm and pressure-free. Never punish accidents or force a child/person to sit. If there is pain, blood, significant constipation, fever, dehydration, or sudden loss of previously learned toileting skills, contact a qualified healthcare professional.</div>
+
+<div class="grid potty-grid">
+  <div class="card">
+    <span class="pill">🎯 Current focus</span>
+    <h2>{{plan[3]}}</h2>
+    <p>{{plan[4]}}</p>
+    <h3>Suggested steps</h3>
+    <ol class="potty-steps">{% for step in plan[5] %}<li>{{step}}</li>{% endfor %}</ol>
+  </div>
+  <div class="card">
+    <span class="pill">🗓️ Simple visual routine</span>
+    <div class="potty-routine">
+      <div><b>1</b><span>🚻 Go to bathroom</span></div>
+      <div><b>2</b><span>👖 Clothing down</span></div>
+      <div><b>3</b><span>🪑 Sit / stand safely</span></div>
+      <div><b>4</b><span>🧻 Clean / wipe</span></div>
+      <div><b>5</b><span>🚽 Flush</span></div>
+      <div><b>6</b><span>🧼 Wash hands</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="card potty-log-card">
+  <h2>Log today's practice</h2>
+  <p>Track small steps and independence, not perfection.</p>
+  <form method="post" class="potty-form">
+    <label>What happened?
+      <select name="event" required><option value="Toilet visit">Toilet visit</option><option value="Used toilet successfully">Used toilet successfully</option><option value="Pee accident">Pee accident</option><option value="Poop accident">Poop accident</option><option value="Communicated toilet need">Communicated toilet need</option></select>
+    </label>
+    <label>Outcome
+      <select name="success"><option>Successful</option><option>Partial / trying</option><option>Accident</option><option>Declined / not ready</option></select>
+    </label>
+    <label>Prompt level
+      <select name="prompt_level"><option>Independent</option><option>Visual reminder</option><option>Verbal prompt</option><option>Hands-on help</option></select>
+    </label>
+    <label>Note <textarea name="note" placeholder="Optional: timing, communication, comfort, or pattern noticed"></textarea></label>
+    <button class="btn" type="submit">Save practice</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Recent progress</h2>
+  {% for r in rows %}<div class="row"><span><b>{{r['event']}}</b><small>{{r['log_date']}} • {{r['prompt_level']}}</small></span><b>{{r['success']}}</b><small>{{r['note'] or ''}}</small></div>{% else %}<p>No potty practice logged yet.</p>{% endfor %}
+</div>
+{% endblock %}
