@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero final-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">Autism Cure • Family-centered support</span>
+    <h1>Small steps. Real practice. A calmer day.</h1>
+    <p>Personalized communication, daily-living, social, movement, regulation and caregiver activities — designed to be short, visual and encouraging.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="{{ url_for('register') }}">Start free</a>
+      <a class="btn secondary" href="{{ url_for('login') }}">Sign in</a>
+    </div>
+    <p class="micro">30-day free access • Then PKR 799/month • Your progress stays saved</p>
+  </div>
+  <div class="hero-panel">
+    <div class="mini-card"><b>🎯 Today</b><span>3 short activities</span></div>
+    <div class="mini-card"><b>💬 Communication</b><span>Practice requesting & sharing</span></div>
+    <div class="mini-card"><b>🧩 Thinking</b><span>Play-based attention & memory</span></div>
+    <div class="mini-card"><b>🌿 Calm</b><span>Simple regulation routines</span></div>
+  </div>
+</section>
+
+<section class="section">
+ <div class="section-head"><span class="eyebrow">Built around the person</span><h2>Everything in one simple home</h2><p>Choose what matters today. Nothing requires long sessions.</p></div>
+ <div class="feature-grid">
+  <div class="feature-card"><span>💬</span><h3>Communication</h3><p>Requests, choices, turn-taking, shared attention and non-verbal communication practice.</p></div>
+  <div class="feature-card"><span>🧠</span><h3>Learning & thinking</h3><p>Attention, matching, sorting, memory and flexible-thinking activities.</p></div>
+  <div class="feature-card"><span>🙂</span><h3>Social & emotions</h3><p>Emotion recognition, social stories and everyday social situations.</p></div>
+  <div class="feature-card"><span>🧼</span><h3>Daily living</h3><p>Step-by-step practice for routines such as hygiene, dressing and independence.</p></div>
+  <div class="feature-card"><span>🏃</span><h3>Movement</h3><p>Age-appropriate movement breaks and simple physical activity tracking.</p></div>
+  <div class="feature-card"><span>🌿</span><h3>Regulation</h3><p>Calm-corner routines, sensory notes and coping practice.</p></div>
+  <div class="feature-card"><span>🍎</span><h3>Wellbeing</h3><p>Food, hydration, sleep, mood and energy observations in one place.</p></div>
+  <div class="feature-card"><span>📊</span><h3>Progress</h3><p>Goals, weekly summaries and downloadable reports that show practice over time.</p></div>
+ </div>
+</section>
+
+<section class="section soft">
+ <div class="split">
+  <div><span class="eyebrow">For caregivers too</span><h2>Support the family, not just the activity.</h2><p>Use short coaching prompts, home routines and simple observations to turn everyday moments into learning opportunities.</p><a class="text-link" href="{{ url_for('register') }}">Create an account →</a></div>
+  <div class="quote-card"><b>Important</b><p>This app supports learning and daily functioning. It does not diagnose autism, prescribe medicines, or promise a cure. For diagnosis, medical treatment or urgent concerns, involve an appropriate qualified professional.</p></div>
+ </div>
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="top"><div><span class="pill">Short + playful</span><h1>Practice with {{p['name']}}</h1><p>One activity at a time. Pause whenever needed.</p></div><a class="btn ghost" href="{{url_for('communication',pid=p['id'])}}">🗣️ Communication board</a></div>
+<div class="grid">
+{% for a in acts %}
+<div class="card activity">
+  <div class="icon">{{a['icon']}}</div><span class="tag">{{a['domain']}}</span><h3>{{a['title']}}</h3><p>{{a['description']}}</p>
+  <div class="playarea" data-activity="{{a['id']}}" data-title="{{a['title']}}" data-domain="{{a['domain']}}">
+    <button class="btn small start">▶ Start</button>
+    <div class="game hidden">
+      <div class="game-status"></div>
+      <div class="game-board"></div>
+      <div class="choices generic-choices">
+        <button data-score="25">🌱 Starting</button><button data-score="50">🙂 Growing</button><button data-score="75">⭐ Doing well</button><button data-score="100">🏆 Great</button>
+      </div>
+      <input class="note" placeholder="Optional caregiver note">
+      <button class="btn save">Save session</button>
+    </div>
+    <span class="done hidden">✓ Saved</span>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
