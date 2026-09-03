@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="top"><div><span class="pill">AAC support</span><h1>🗣️ Communication board — {{p['name']}}</h1><p>Tap pictures or words to build a simple message. Use this alongside the person's usual AAC or communication method.</p></div><a class="btn ghost" href="{{url_for('profile',pid=p['id'])}}">← Back</a></div>
+<div class="notice"><b>Caregiver tip:</b> Model the same words/pictures the person uses. Give extra processing time and never require a child to repeat a message.</div>
+<div class="comm-shell">
+  <div class="aac-sentence"><div id="commOutput">Choose something…</div><button class="btn small ghost" id="clearComm" type="button">Clear</button></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 16px">
+    <label for="languageSelect"><b>🌐 Language / زبان</b></label>
+    <select id="languageSelect" class="input" style="max-width:240px">
+      <option value="en">English</option>
+      <option value="ur">Urdu / اردو</option>
+    </select>
+    <span id="languageHelp" class="muted">Choose Urdu to practise everyday communication words in Urdu.</span>
+  </div>
+  <div class="aac-categories" role="tablist">
+    <button class="aac-tab active" data-cat="needs" type="button">🧡 Needs</button><button class="aac-tab" data-cat="feelings" type="button">😊 Feelings</button><button class="aac-tab" data-cat="actions" type="button">🎯 Actions</button><button class="aac-tab" data-cat="people" type="button">👨‍👩‍👧 People</button>
+  </div>
+  <div class="comm-grid" id="aacGrid"></div>
+  <div class="comm-actions"><button class="btn primary" id="speakComm" type="button">🔊 Speak message</button></div>
+</div>
+<script>
+(function(){
+ const data={
+  needs:[['I want','👉','میں چاہتا/چاہتی ہوں'],['I need help','🆘','مجھے مدد چاہیے'],['More','➕','مزید'],['Stop','🛑','رکیں'],['Break','🌿','وقفہ'],['Yes','✅','ہاں'],['No','❌','نہیں'],['Food','🍎','کھانا'],['Water','💧','پانی'],['Washroom','🚻','باتھ روم'],['Play','🎲','کھیلنا'],['Sleep','😴','سونا']],
+  feelings:[['Happy','😊','خوش'],['Sad','😢','اداس'],['Angry','😠','غصہ'],['Scared','😨','ڈر لگ رہا ہے'],['Tired','😴','تھکا ہوا/ہوئی'],['Calm','😌','پرسکون'],['Hurt','🤕','درد ہو رہا ہے'],['Too loud','🔊','بہت تیز آواز'],['Too bright','💡','بہت تیز روشنی'],['I like it','👍','مجھے یہ پسند ہے'],['I don’t like it','👎','مجھے یہ پسند نہیں'],['I feel sick','🤢','میری طبیعت خراب ہے']],
+  actions:[['Eat','🍽️','کھانا'],['Drink','🥤','پینا'],['Go','🚶','جانا'],['Come','👋','آنا'],['Sit','🪑','بیٹھنا'],['Sleep','🛏️','سونا'],['Play','🎮','کھیلنا'],['Help me','🆘','میری مدد کریں'],['Wait','⏳','انتظار کریں'],['Finished','🏁','ختم'],['Again','🔁','دوبارہ'],['Quiet','🤫','خاموشی']],
+  people:[['Mama','👩','امی'],['Papa','👨','ابو'],['Caregiver','🧑‍🧑‍🧒','نگہداشت کرنے والا'],['Teacher','👩‍🏫','استاد'],['Therapist','🧑‍⚕️','تھراپسٹ'],['Friend','🧒','دوست'],['Brother','👦','بھائی'],['Sister','👧','بہن'],['Grandma','👵','دادی / نانی'],['Grandpa','👴','دادا / نانا'],['Me','🙋','میں'],['You','👉','آپ']]
+ };
+ const labels={
+  en:{needs:'🧡 Needs',feelings:'😊 Feelings',actions:'🎯 Actions',people:'👨‍👩‍👧 People',clear:'Clear',choose:'Choose something…',speak:'🔊 Speak message',help:'Choose Urdu to practise everyday communication words in Urdu.'},
+  ur:{needs:'🧡 ضروریات',feelings:'😊 جذبات',actions:'🎯 کام',people:'👨‍👩‍👧 لوگ',clear:'صاف کریں',choose:'کچھ منتخب کریں…',speak:'🔊 پیغام سنیں',help:'روزمرہ کے الفاظ اردو میں سیکھنے اور بولنے کی مشق کریں۔'}
+ };
+ const grid=document.getElementById('aacGrid'),out=document.getElementById('commOutput'),lang=document.getElementById('languageSelect');
+ const clearBtn=document.getElementById('clearComm'),speakBtn=document.getElementById('speakComm'),help=document.getElementById('languageHelp');
+ let message=[];
+ function currentLang(){return lang.value==='ur'?'ur':'en';}
+ function displayLabel(item){return currentLang()==='ur'?item[2]:item[0];}
+ function render(cat){
+   grid.innerHTML='';
+   data[cat].forEach(item=>{
+     const b=document.createElement('button'); b.type='button'; b.className='comm-btn';
+     b.innerHTML='<span>'+item[1]+'</span><b>'+displayLabel(item)+'</b>';
+     b.onclick=()=>{message=[{en:item[0],ur:item[2]}]; out.textContent=currentLang()==='ur'?item[2]:item[0];};
+     grid.appendChild(b);
+   });
+ }
+ function refreshLanguage(){
+   const l=currentLang(),active=document.querySelector('.aac-tab.active');
+   clearBtn.textContent=labels[l].clear; speakBtn.textContent=labels[l].speak; help.textContent=labels[l].help;
+   out.textContent=message.length?message.map(x=>l==='ur'?x.ur:x.en).join(' '):labels[l].choose;
+   document.querySelectorAll('.aac-tab').forEach(t=>t.textContent=labels[l][t.dataset.cat]);
+   if(active) render(active.dataset.cat);
+ }
+ document.querySelectorAll('.aac-tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.aac-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');render(t.dataset.cat);});
+ clearBtn.onclick=()=>{message=[];out.textContent=labels[currentLang()].choose;};
+ function getVoice(langCode){
+   const voices=window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+   if(!voices.length) return null;
+   const wanted=langCode.toLowerCase();
+   return voices.find(v=>v.lang && v.lang.toLowerCase()===wanted)
+       || voices.find(v=>v.lang && v.lang.toLowerCase().startsWith(wanted.split('-')[0]))
+       || null;
+ }
+ function speakMessage(){
+   if(!('speechSynthesis' in window)){
+     alert(currentLang()==='ur'?'آپ کے براؤزر میں آواز کی سہولت دستیاب نہیں۔':'Speech is not supported in this browser.');
+     return;
+   }
+   if(!message.length){
+     alert(currentLang()==='ur'?'پہلے کوئی پیغام منتخب کریں۔':'Please select a message first.');
+     return;
+   }
+   const l=currentLang();
+   const text=message.map(x=>l==='ur'?x.ur:x.en).join(' ');
+   speechSynthesis.cancel();
+   const langCode=l==='ur'?'ur-PK':'en-US';
+   const voice=getVoice(langCode);
+   if(l==='ur' && !voice){
+     // Windows/Chrome may not provide an Urdu speech voice. Use an online
+     // Urdu TTS fallback only when the user explicitly presses Speak.
+     const audio=new Audio('/urdu-tts?text='+encodeURIComponent(text));
+     audio.preload='auto';
+     audio.play().catch(()=>{
+       alert('اردو آواز چل نہیں سکی۔ براہِ کرم دوبارہ Speak دبائیں۔');
+     });
+     return;
+   }
+   const utterance=new SpeechSynthesisUtterance(text);
+   utterance.lang=langCode;
+   if(voice) utterance.voice=voice;
+   utterance.rate=0.85;
+   utterance.pitch=1;
+   speechSynthesis.speak(utterance);
+ }
+ speakBtn.onclick=speakMessage;
+ if('speechSynthesis' in window && 'onvoiceschanged' in speechSynthesis){
+   speechSynthesis.onvoiceschanged=()=>{};
+ }
+ lang.onchange=refreshLanguage;
+ render('needs');
+ refreshLanguage();
+})();
+</script>
+{% endblock %}
