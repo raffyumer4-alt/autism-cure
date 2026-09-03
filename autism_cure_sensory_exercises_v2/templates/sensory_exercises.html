@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="top">
+  <div><span class="pill">Choice-based sensory support</span><h1>🧠 Sensory exercises for {{p['name']}}</h1><p>Short, gentle activities for regulation, movement and sensory exploration. Follow the child’s cues and pause whenever needed.</p></div>
+  <a class="btn ghost" href="{{url_for('sensory',pid=p['id'])}}">🎧 Sensory tracker</a>
+</div>
+<div class="notice"><b>Safety first:</b> These are general supportive activities, not a treatment or diagnosis. Never force a sensory experience. Stop if the person becomes distressed, dizzy, painful or uncomfortable. For individualized sensory plans, ask an occupational therapist or other qualified professional.</div>
+<div class="sensory-grid">
+{% for cat,title,icon,duration,benefit,steps,age,safety in exercises %}
+<div class="card sensory-exercise">
+  <div class="sensory-head"><span class="sensory-icon">{{icon}}</span><div><span class="tag">{{cat}}</span><h3>{{title}}</h3></div></div>
+  <p class="sensory-benefit">{{benefit}}</p>
+  <div class="sensory-meta"><span>⏱ {{duration}}</span><span>👤 {{age}}</span></div>
+  <details><summary>How to do it</summary><p>{{steps}}</p></details>
+  <details><summary>Safety note</summary><p>{{safety}}</p></details>
+  <form method="post" class="sensory-log-form">
+    <input type="hidden" name="exercise_name" value="{{title}}"><input type="hidden" name="category" value="{{cat}}">
+    <div class="sensory-row"><select name="minutes"><option value="1">1 min</option><option value="2">2 min</option><option value="3" selected>3 min</option><option value="5">5 min</option><option value="10">10 min</option></select><select name="comfort"><option>Comfortable</option><option>Neutral</option><option>Stopped early</option><option>Not comfortable</option></select></div>
+    <input name="note" placeholder="Optional caregiver note"><button class="btn small" type="submit">✓ Log session</button>
+  </form>
+</div>
+{% endfor %}
+</div>
+<div class="card"><h2>Recent sensory exercise sessions</h2>{% for r in rows %}<div class="row"><span><b>{{r['exercise_name']}}</b> • {{r['category']}}</span><span>{{r['minutes']}} min • {{r['comfort']}}</span><small>{{r['log_date']}}{% if r['note'] %} • {{r['note']}}{% endif %}</small></div>{% else %}<p>No sensory exercise sessions logged yet.</p>{% endfor %}</div>
+{% endblock %}
